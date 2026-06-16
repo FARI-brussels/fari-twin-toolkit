@@ -1,0 +1,15 @@
+* {
+  box-sizing: border-box;
+}
+html,
+body,
+#app {
+  margin: 0;
+  height: 100%;
+}
+body {
+  font-family: var(--fari-font-primary);
+  color: var(--fari-black);
+  background: var(--fari-white);
+  font-size: var(--fari-font-size-body-sm);
+}

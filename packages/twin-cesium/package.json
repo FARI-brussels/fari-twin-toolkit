@@ -1,0 +1,42 @@
+{
+  "name": "@fari-brussels/twin-cesium",
+  "version": "0.1.0",
+  "description": "Batteries-included FARI digital-twin kit for Cesium + Vue: the viewer stack (core + Vue bindings + Cesium adapter) under one install, with UI components on the /ui subpath.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./ui": {
+      "types": "./dist/ui.d.ts",
+      "import": "./dist/ui.js"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@fari-brussels/viewer-core": "workspace:*",
+    "@fari-brussels/viewer-vue": "workspace:*",
+    "@fari-brussels/viewer-cesium": "workspace:*",
+    "@fari-brussels/twin-ui-vue": "workspace:*"
+  },
+  "peerDependencies": {
+    "cesium": ">=1.110",
+    "vue": "^3.4"
+  },
+  "devDependencies": {
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

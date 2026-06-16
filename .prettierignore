@@ -1,0 +1,22 @@
+# Build output / deps
+**/dist/**
+**/.venv/**
+**/.turbo/**
+pnpm-lock.yaml
+
+# Generated code — owned by codegen, not the formatter (keeps CI's codegen-drift
+# check and format check from fighting each other).
+packages/twin-types/src/generated.ts
+packages/twin-types/src/schemas.ts
+python/**/models.py
+
+# Generated from raw Brussels data by `pnpm --filter @fari/brussels-twin import`.
+apps/brussels-twin/src/data/real.ts
+apps/brussels-twin/data/raw/
+
+# Faithful port of fari-digital-twin-frontend, living here temporarily for HMR
+# against the toolkit. It keeps the original repo's formatting (shadcn-vue style:
+# semicolons, double quotes) so the eventual extraction to a branch in that repo
+# stays a clean diff. Toolkit packages it promotes into still follow the root
+# prettier style; only the app shell is exempt.
+apps/digital-twin/

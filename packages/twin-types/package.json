@@ -1,0 +1,32 @@
+{
+  "name": "@fari-brussels/twin-types",
+  "version": "0.1.0",
+  "description": "TypeScript types for the FARI Twin Toolkit wire format, generated from specs/openapi.yaml.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "generate": "openapi-typescript ../../specs/openapi.yaml -o src/generated.ts && node scripts/gen-aliases.mjs",
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "devDependencies": {
+    "openapi-typescript": "^7.4.1",
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.3",
+    "yaml": "^2.6.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "name": "@fari-brussels/playground",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Visual playground / mockup app for the FARI Twin Toolkit (tokens now, components later). HMR dev server.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "@fari-brussels/twin-types": "workspace:*",
+    "@fari-brussels/twin-ui-icons": "workspace:*",
+    "@fari-brussels/twin-ui-tokens": "workspace:*",
+    "@fari-brussels/twin-ui-vue": "workspace:*",
+    "@fari-brussels/viewer-cesium": "workspace:*",
+    "@fari-brussels/viewer-core": "workspace:*",
+    "@fari-brussels/viewer-maplibre": "workspace:*",
+    "cesium": "^1.123.0",
+    "maplibre-gl": "^4.7.1",
+    "vue": "^3.5.12"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.1.4",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.10",
+    "vite-plugin-cesium": "^1.2.23",
+    "vue-tsc": "^2.1.10"
+  }
+}

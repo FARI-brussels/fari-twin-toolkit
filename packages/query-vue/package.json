@@ -1,0 +1,37 @@
+{
+  "name": "@fari-brussels/query-vue",
+  "version": "0.1.0",
+  "description": "Small TanStack Vue Query helpers for FARI apps: mutation factories with automatic cache invalidation.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "clean": "rm -rf dist"
+  },
+  "peerDependencies": {
+    "@tanstack/vue-query": "^5",
+    "vue": "^3.4"
+  },
+  "devDependencies": {
+    "@tanstack/vue-query": "^5.92.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.4",
+    "vue": "^3.5.12"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

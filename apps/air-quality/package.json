@@ -1,0 +1,28 @@
+{
+  "name": "@fari-brussels/air-quality",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Brussels Air Quality — a FARI Twin Toolkit demo on the MapLibre 2D renderer. Compares official + citizen-science NO₂ measurements against EU/WHO norms.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "@fari-brussels/twin-types": "workspace:*",
+    "@fari-brussels/twin-ui-tokens": "workspace:*",
+    "@fari-brussels/viewer-core": "workspace:*",
+    "@fari-brussels/viewer-maplibre": "workspace:*",
+    "@fari-brussels/viewer-vue": "workspace:*",
+    "maplibre-gl": "^4.7.1",
+    "vue": "^3.5.12"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.1.4",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.10",
+    "vue-tsc": "^2.1.10"
+  }
+}

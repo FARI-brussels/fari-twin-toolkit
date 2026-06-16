@@ -1,0 +1,15 @@
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  font-family: var(--fari-font-primary);
+  color: var(--fari-black);
+  background: var(--fari-white);
+}
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  background: #f3f3f3;
+  padding: 0.1rem 0.3rem;
+  border-radius: 0.25rem;
+}

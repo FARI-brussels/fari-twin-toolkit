@@ -1,0 +1,38 @@
+{
+  "name": "@fari-brussels/viewer-maplibre",
+  "version": "0.1.0",
+  "description": "MapLibre GL adapter for @fari-brussels/viewer-core — draws LayerSpecs on a fast 2D vector/raster map with animated paint transitions.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@fari-brussels/viewer-core": "workspace:*"
+  },
+  "peerDependencies": {
+    "maplibre-gl": ">=4"
+  },
+  "devDependencies": {
+    "maplibre-gl": "^4.7.1",
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.4"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
