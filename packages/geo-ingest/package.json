@@ -1,0 +1,39 @@
+{
+  "name": "@fari-brussels/geo-ingest",
+  "version": "0.1.0",
+  "description": "Node geospatial ingestion for the FARI Twin Toolkit: reprojection, readers, containment, and Feature -> Place mapping.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@fari-brussels/twin-types": "workspace:*",
+    "proj4": "^2.12.1",
+    "shapefile": "^0.6.6",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@types/proj4": "^2.5.5",
+    "@types/shapefile": "^0.6.4",
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.4"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

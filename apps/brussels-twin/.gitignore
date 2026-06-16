@@ -1,0 +1,5 @@
+# Real Brussels source data — large, copy/pasted from the old repo, not code.
+data/raw/
+
+# Generated from data/raw/ by `pnpm import` — large, derived, never hand-edited.
+src/data/real.ts

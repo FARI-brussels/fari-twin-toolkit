@@ -1,0 +1,36 @@
+{
+  "name": "@fari-brussels/viewer-cesium",
+  "version": "0.1.0",
+  "description": "Cesium adapter for @fari-brussels/viewer-core — draws LayerSpecs on a CesiumJS globe.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@fari-brussels/viewer-core": "workspace:*"
+  },
+  "peerDependencies": {
+    "cesium": ">=1.110"
+  },
+  "devDependencies": {
+    "cesium": "^1.123.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

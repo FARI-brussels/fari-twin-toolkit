@@ -1,0 +1,14 @@
+/* FARI brand colors (from @fari-brussels/twin-ui-tokens / the brand book). */
+:root {
+  --vp-c-brand-1: #2e4fbf; /* FARI Web Blue */
+  --vp-c-brand-2: #183e91; /* FARI Blue */
+  --vp-c-brand-3: #64d8bf; /* FARI Lighthouse Blue */
+  --vp-c-brand-soft: rgba(100, 216, 191, 0.16);
+}
+
+.VPHero .name {
+  background: linear-gradient(90deg, #00dcbe 0%, #00639f 75%, #1d4590 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

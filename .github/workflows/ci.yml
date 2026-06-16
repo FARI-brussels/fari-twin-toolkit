@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  node:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm format:check
+      - name: twin-types codegen is up to date
+        run: |
+          pnpm --filter @fari-brussels/twin-types generate
+          git diff --exit-code -- packages/twin-types/src
+
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+        with:
+          python-version: '3.12'
+      - name: twin-types — Pydantic models are up to date
+        working-directory: python/twin-types
+        run: |
+          ./generate.sh
+          git diff --exit-code -- fari_twin_types/models.py
+      - name: twin-types — pytest
+        working-directory: python/twin-types
+        run: uv run pytest -q
+      - name: pipeline-core — pytest
+        working-directory: python/pipeline-core
+        run: uv run pytest -q
+      - name: pipeline-service — pytest
+        working-directory: python/pipeline-service
+        run: uv run pytest -q

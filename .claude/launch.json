@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "playground",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "@fari-brussels/playground", "dev"],
+      "port": 5180
+    },
+    {
+      "name": "digital-twin",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "@fari-brussels/digital-twin", "dev"],
+      "port": 5173
+    }
+  ]
+}

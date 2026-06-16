@@ -1,0 +1,5 @@
+# JS/TS packages and apps are managed by pnpm.
+# Python packages under python/ are managed separately by uv (see python/README.md).
+packages:
+  - 'packages/*'
+  - 'apps/*'

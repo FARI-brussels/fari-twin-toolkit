@@ -1,0 +1,515 @@
+openapi: 3.1.0
+info:
+  title: FARI Twin Toolkit — Wire Format
+  version: 0.1.0
+  description: >
+    Source-of-truth schemas for the FARI digital-twin toolkit. This document is
+    intentionally schema-only (no endpoints yet): it defines the shared wire
+    format from which both TypeScript types (@fari-brussels/twin-types) and Pydantic
+    models (fari-twin-types) are generated, so the two never drift.
+
+
+    Conventions:
+
+    - All multi-word fields use snake_case on the wire (zero-config for
+      Pydantic/FastAPI and the existing FARI backend; TypeScript consumers read
+      them as-is).
+
+    - Geometry follows RFC 7946 (GeoJSON).
+
+    - "Reused" resource schemas (Asset, Tileset, WmsLayer, RealtimeDataset)
+      are cleaned-up versions of the shapes in fari-digital-twin-frontend.
+
+    - "Fresh" schemas (Place, Indicator, Timeseries, Scenario, Job) generalize
+      patterns observed across BrusselsMigration and TreeCity.
+
+
+    Out of scope here (lives in @fari-brussels/viewer-core): LayerSpec — the renderer
+    union that tells a viewer how to draw these resources.
+  license:
+    name: Apache-2.0
+paths: {}
+components:
+  schemas:
+    # ----------------------------------------------------------------------
+    # GeoJSON (RFC 7946)
+    # ----------------------------------------------------------------------
+    Position:
+      type: array
+      description: '[longitude, latitude] or [longitude, latitude, altitude].'
+      items:
+        type: number
+      minItems: 2
+      maxItems: 3
+    BBox:
+      type: array
+      description: Bounding box [west, south, east, north] (or 3D variant).
+      items:
+        type: number
+      minItems: 4
+      maxItems: 6
+    Point:
+      type: object
+      required: [type, coordinates]
+      properties:
+        type:
+          type: string
+          const: Point
+        coordinates:
+          $ref: '#/components/schemas/Position'
+    MultiPoint:
+      type: object
+      required: [type, coordinates]
+      properties:
+        type:
+          type: string
+          const: MultiPoint
+        coordinates:
+          type: array
+          items:
+            $ref: '#/components/schemas/Position'
+    LineString:
+      type: object
+      required: [type, coordinates]
+      properties:
+        type:
+          type: string
+          const: LineString
+        coordinates:
+          type: array
+          items:
+            $ref: '#/components/schemas/Position'
+    MultiLineString:
+      type: object
+      required: [type, coordinates]
+      properties:
+        type:
+          type: string
+          const: MultiLineString
+        coordinates:
+          type: array
+          items:
+            type: array
+            items:
+              $ref: '#/components/schemas/Position'
+    Polygon:
+      type: object
+      required: [type, coordinates]
+      properties:
+        type:
+          type: string
+          const: Polygon
+        coordinates:
+          type: array
+          items:
+            type: array
+            items:
+              $ref: '#/components/schemas/Position'
+    MultiPolygon:
+      type: object
+      required: [type, coordinates]
+      properties:
+        type:
+          type: string
+          const: MultiPolygon
+        coordinates:
+          type: array
+          items:
+            type: array
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/Position'
+    GeometryCollection:
+      type: object
+      required: [type, geometries]
+      properties:
+        type:
+          type: string
+          const: GeometryCollection
+        geometries:
+          type: array
+          items:
+            $ref: '#/components/schemas/Geometry'
+    Geometry:
+      description: Any GeoJSON geometry object.
+      oneOf:
+        - $ref: '#/components/schemas/Point'
+        - $ref: '#/components/schemas/MultiPoint'
+        - $ref: '#/components/schemas/LineString'
+        - $ref: '#/components/schemas/MultiLineString'
+        - $ref: '#/components/schemas/Polygon'
+        - $ref: '#/components/schemas/MultiPolygon'
+        - $ref: '#/components/schemas/GeometryCollection'
+      discriminator:
+        propertyName: type
+    Feature:
+      type: object
+      required: [type, geometry, properties]
+      properties:
+        type:
+          type: string
+          const: Feature
+        id:
+          type: [string, integer]
+        geometry:
+          anyOf:
+            - $ref: '#/components/schemas/Geometry'
+            - type: 'null'
+        properties:
+          type: [object, 'null']
+          additionalProperties: true
+        bbox:
+          $ref: '#/components/schemas/BBox'
+    FeatureCollection:
+      type: object
+      required: [type, features]
+      properties:
+        type:
+          type: string
+          const: FeatureCollection
+        features:
+          type: array
+          items:
+            $ref: '#/components/schemas/Feature'
+        bbox:
+          $ref: '#/components/schemas/BBox'
+
+    # ----------------------------------------------------------------------
+    # Resources (reused & normalized from fari-digital-twin-frontend)
+    # ----------------------------------------------------------------------
+    Visibility:
+      type: string
+      enum: [public, private, shared]
+    ResourceBase:
+      type: object
+      description: Fields shared by every managed resource.
+      required: [id, name]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: [string, 'null']
+        source:
+          type: [string, 'null']
+        owner_id:
+          type: [integer, 'null']
+        visibility:
+          $ref: '#/components/schemas/Visibility'
+        created_at:
+          type: [string, 'null']
+          format: date-time
+    Asset:
+      description: A downloadable 3D model / file asset (e.g. glTF).
+      allOf:
+        - $ref: '#/components/schemas/ResourceBase'
+        - type: object
+          required: [url]
+          properties:
+            url:
+              type: string
+            asset_type:
+              type: [string, 'null']
+              description: e.g. "gltf", "glb", "pointcloud".
+            filename:
+              type: [string, 'null']
+    Tileset:
+      description: A Cesium 3D Tiles tileset.
+      allOf:
+        - $ref: '#/components/schemas/ResourceBase'
+        - type: object
+          required: [tileset_url]
+          properties:
+            tileset_url:
+              type: string
+            files_base_url:
+              type: [string, 'null']
+            root_file:
+              type: [string, 'null']
+            file_count:
+              type: [integer, 'null']
+    WmsLayer:
+      type: object
+      description: A WMS map layer offered by a provider/server.
+      required: [url, layer]
+      properties:
+        id:
+          type: [integer, 'null']
+        url:
+          type: string
+          description: WMS server base URL (also the grouping key).
+        layer:
+          type: string
+          description: WMS layer name.
+        description:
+          type: [string, 'null']
+    RealtimeDataset:
+      type: object
+      description: A live/polled GeoJSON data source (mobility, sensors, ...).
+      required: [id, name, endpoint, source_kind]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: [string, 'null']
+        endpoint:
+          type: string
+          description: URL returning a GeoJSON FeatureCollection.
+        source_kind:
+          type: string
+          description: >
+            Open vocabulary identifying the provider/feed, used for styling
+            (e.g. "stib", "sncb", "bolt", "dott", "telraam",
+            "sensor_community", "opensky").
+        poll_seconds:
+          type: [integer, 'null']
+          description: Suggested polling interval; null for static.
+
+    # ----------------------------------------------------------------------
+    # Places (fresh — the common spatial unit)
+    # ----------------------------------------------------------------------
+    PlaceKind:
+      type: string
+      enum:
+        - region
+        - municipality
+        - district
+        - monitoring_district
+        - statistical_sector
+        - site
+        - custom
+    Place:
+      type: object
+      description: >
+        A georeferenced unit that indicators and scenarios attach to. Generic
+        on purpose: a Brussels monitoring district, a TreeCity pilot site, or a
+        single tree are all Places of different kinds.
+      required: [id, name, kind]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        kind:
+          $ref: '#/components/schemas/PlaceKind'
+        code:
+          type: [string, 'null']
+          description: External code (NIS/LAU/INS, internal id, ...).
+        parent_id:
+          type: [string, 'null']
+          description: Containing place, for hierarchies (region > district).
+        geometry:
+          anyOf:
+            - $ref: '#/components/schemas/Geometry'
+            - type: 'null'
+        bbox:
+          $ref: '#/components/schemas/BBox'
+        centroid:
+          anyOf:
+            - $ref: '#/components/schemas/Point'
+            - type: 'null'
+        properties:
+          type: object
+          additionalProperties: true
+
+    # ----------------------------------------------------------------------
+    # Indicators & timeseries (fresh — generalized from BrusselsMigration)
+    # ----------------------------------------------------------------------
+    IndicatorCategory:
+      type: string
+      enum:
+        - population
+        - environment
+        - socioeconomic
+        - heat_vulnerability
+        - mobility
+        - custom
+    Indicator:
+      type: object
+      description: Definition (metadata) of a measurable variable.
+      required: [key, label, category]
+      properties:
+        key:
+          type: string
+          description: Stable machine key (e.g. "unemployment_rate").
+        label:
+          type: string
+        unit:
+          type: [string, 'null']
+        category:
+          $ref: '#/components/schemas/IndicatorCategory'
+        higher_is_better:
+          type: boolean
+          default: true
+          description: >
+            Whether larger values are desirable (income) or not (unemployment).
+            Drives color-scale direction and scenario delta coloring.
+        description:
+          type: [string, 'null']
+    TimeseriesPoint:
+      type: object
+      required: [period]
+      properties:
+        period:
+          type: string
+          description: Year ("2024") or ISO-8601 date/datetime.
+        value:
+          type: [number, 'null']
+    Timeseries:
+      type: object
+      description: One indicator's values over time for one place.
+      required: [place_id, indicator_key, points]
+      properties:
+        place_id:
+          type: string
+        indicator_key:
+          type: string
+        points:
+          type: array
+          items:
+            $ref: '#/components/schemas/TimeseriesPoint'
+    IndicatorValue:
+      type: object
+      description: A single observation (e.g. for a choropleth at one period).
+      required: [place_id, indicator_key, period]
+      properties:
+        place_id:
+          type: string
+        indicator_key:
+          type: string
+        period:
+          type: string
+        value:
+          type: [number, 'null']
+
+    # ----------------------------------------------------------------------
+    # Scenarios (fresh — what-if engine, from BrusselsMigration)
+    # ----------------------------------------------------------------------
+    ModelKind:
+      type: string
+      description: Statistical model used to predict scenario outcomes.
+      enum:
+        - linear
+        - polynomial2
+        - cart
+        - knn
+    ScenarioOverride:
+      type: object
+      description: A user-set value overriding a predictor for what-if analysis.
+      required: [place_id, indicator_key, value]
+      properties:
+        place_id:
+          type: string
+        indicator_key:
+          type: string
+        value:
+          type: number
+    Scenario:
+      type: object
+      required: [id, name, overrides]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        base_period:
+          type: [string, 'null']
+        model:
+          $ref: '#/components/schemas/ModelKind'
+        overrides:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScenarioOverride'
+        notes:
+          type: [string, 'null']
+        created_at:
+          type: [string, 'null']
+          format: date-time
+
+    # ----------------------------------------------------------------------
+    # Jobs (fresh — long-running analysis, from TreeCity pipeline)
+    # ----------------------------------------------------------------------
+    JobStatus:
+      type: string
+      enum: [pending, running, succeeded, failed, cancelled]
+    JobFile:
+      type: object
+      required: [filename, url]
+      properties:
+        filename:
+          type: string
+        url:
+          type: string
+        kind:
+          type: [string, 'null']
+          description: e.g. "pointcloud", "report".
+        size_bytes:
+          type: [integer, 'null']
+    JobResult:
+      type: object
+      properties:
+        report:
+          type: [object, 'null']
+          additionalProperties: true
+        files:
+          type: array
+          items:
+            $ref: '#/components/schemas/JobFile'
+    Job:
+      type: object
+      description: A unit of long-running, step-based processing.
+      required: [id, kind, status, progress_pct]
+      properties:
+        id:
+          type: string
+        kind:
+          type: string
+          description: Pipeline identifier (e.g. "gpr", "ingest").
+        status:
+          $ref: '#/components/schemas/JobStatus'
+        progress_pct:
+          type: number
+          minimum: 0
+          maximum: 100
+        current_step:
+          type: [string, 'null']
+        step_index:
+          type: [integer, 'null']
+        step_count:
+          type: [integer, 'null']
+        params:
+          type: object
+          additionalProperties: true
+        result:
+          anyOf:
+            - $ref: '#/components/schemas/JobResult'
+            - type: 'null'
+        error:
+          type: [string, 'null']
+        created_at:
+          type: [string, 'null']
+          format: date-time
+        started_at:
+          type: [string, 'null']
+          format: date-time
+        finished_at:
+          type: [string, 'null']
+          format: date-time
+
+    # ----------------------------------------------------------------------
+    # Shared helpers
+    # ----------------------------------------------------------------------
+    PageMeta:
+      type: object
+      required: [total]
+      properties:
+        total:
+          type: integer
+        limit:
+          type: [integer, 'null']
+        offset:
+          type: [integer, 'null']

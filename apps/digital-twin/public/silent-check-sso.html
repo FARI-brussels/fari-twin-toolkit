@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Silent SSO</title>
+</head>
+<body>
+<script>
+  try {
+    parent.postMessage(location.href, location.origin);
+  } catch (err) {
+    // Fallback for browsers without parent access
+    parent.postMessage('error', '*');
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://unpkg.com/@changesets/config@3.0.0/schema.json",
+  "changelog": "@changesets/cli/changelog",
+  "commit": false,
+  "fixed": [],
+  "linked": [],
+  "access": "restricted",
+  "baseBranch": "main",
+  "updateInternalDependencies": "patch",
+  "ignore": [
+    "@fari-brussels/air-quality",
+    "@fari-brussels/brussels-twin",
+    "@fari-brussels/digital-twin",
+    "@fari-brussels/docs",
+    "@fari-brussels/playground"
+  ]
+}

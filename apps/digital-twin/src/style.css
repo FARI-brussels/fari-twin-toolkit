@@ -1,0 +1,222 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Open+Sans:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* Liquid-glass surface: SVG-displacement refraction over a frosted blur. Chromium
+   gets the `#liquid-glass` displacement (defined in Layout.vue); Safari falls back
+   to plain frosted blur. Use sparingly on overlays/controls for the extra "oumph". */
+.liquid-glass {
+  -webkit-backdrop-filter: blur(12px) saturate(1.7);
+  backdrop-filter: url('#liquid-glass') blur(2px) saturate(1.7) brightness(1.04);
+}
+
+/* =============================================================================
+   FARI Design System — shadcn theme bound to @fari-brussels/twin-ui-tokens
+   The --fari-* custom properties (imported in main.ts) are the single source of
+   truth for the brand palette. Each shadcn token references one, so changing a
+   brand value in the toolkit flows through here. Where the original demo used a
+   non-brand value (generic red, Inter), we prefer the FARI brand.
+   ============================================================================= */
+
+@layer base {
+  :root {
+    /* Neutral surfaces (not brand-defined; kept as light-UI neutrals) */
+    --background: #f6f6f6;
+    --foreground: var(--fari-black);
+    --card: var(--fari-white);
+    --card-foreground: var(--fari-black);
+    --popover: var(--fari-white);
+    --popover-foreground: var(--fari-black);
+
+    /* Primary: FARI Web Blue */
+    --primary: var(--fari-web-blue);
+    --primary-foreground: var(--fari-white);
+
+    /* Secondary: FARI Lighthouse */
+    --secondary: var(--fari-lighthouse);
+    --secondary-foreground: var(--fari-black);
+
+    /* Muted */
+    --muted: #ecedf2;
+    --muted-foreground: #64748b;
+
+    /* Accent: FARI status "gathering" blue (replaces the old non-brand #4393de) */
+    --accent: var(--fari-status-gathering);
+    --accent-foreground: var(--fari-white);
+
+    /* Destructive: FARI status "not-ok" red (brand red over the generic #ef4444) */
+    --destructive: var(--fari-status-not-ok);
+    --destructive-foreground: var(--fari-white);
+
+    /* Borders & Inputs */
+    --border: #e2e4e9;
+    --input: #e2e4e9;
+    --ring: var(--fari-web-blue);
+
+    /* Chart colors — all brand tokens */
+    --chart-1: var(--fari-web-blue);
+    --chart-2: var(--fari-lighthouse);
+    --chart-3: var(--fari-status-gathering);
+    --chart-4: var(--fari-blue);
+    --chart-5: var(--fari-purple);
+
+    /* Sidebar */
+    --sidebar: var(--fari-white);
+    --sidebar-foreground: var(--fari-black);
+    --sidebar-primary: var(--fari-web-blue);
+    --sidebar-primary-foreground: var(--fari-white);
+    --sidebar-accent: #ecedf2;
+    --sidebar-accent-foreground: var(--fari-black);
+    --sidebar-border: #e2e4e9;
+    --sidebar-ring: var(--fari-web-blue);
+
+    /* Typography — FARI brand fonts (Montserrat primary per the brand book) */
+    --font-sans: var(--fari-font-primary);
+    --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+    /* Radius */
+    --radius: 0.5rem;
+
+    /* Shadows */
+    --shadow-2xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+
+    --tracking-normal: 0em;
+    --spacing: 0.25rem;
+  }
+
+  .dark {
+    --background: var(--fari-black);
+    --foreground: var(--fari-white);
+    --card: #1e1e1e;
+    --card-foreground: var(--fari-white);
+    --popover: #1e1e1e;
+    --popover-foreground: var(--fari-white);
+
+    /* On dark, the brighter web-blue reads better as primary than deep blue */
+    --primary: var(--fari-web-blue);
+    --primary-foreground: var(--fari-white);
+
+    --secondary: var(--fari-lighthouse);
+    --secondary-foreground: var(--fari-black);
+
+    --muted: #2a2a2a;
+    --muted-foreground: #94a3b8;
+
+    --accent: var(--fari-status-gathering);
+    --accent-foreground: var(--fari-white);
+
+    --destructive: var(--fari-status-not-ok);
+    --destructive-foreground: var(--fari-white);
+
+    --border: #2a2a2a;
+    --input: #2a2a2a;
+    --ring: var(--fari-web-blue);
+
+    --chart-1: var(--fari-web-blue);
+    --chart-2: var(--fari-lighthouse);
+    --chart-3: var(--fari-status-gathering);
+    --chart-4: var(--fari-blue);
+    --chart-5: var(--fari-purple);
+
+    --sidebar: #1e1e1e;
+    --sidebar-foreground: var(--fari-white);
+    --sidebar-primary: var(--fari-web-blue);
+    --sidebar-primary-foreground: var(--fari-white);
+    --sidebar-accent: #2a2a2a;
+    --sidebar-accent-foreground: var(--fari-white);
+    --sidebar-border: #2a2a2a;
+    --sidebar-ring: var(--fari-web-blue);
+  }
+
+  @theme inline {
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-destructive: var(--destructive);
+    --color-destructive-foreground: var(--destructive-foreground);
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+    --color-chart-1: var(--chart-1);
+    --color-chart-2: var(--chart-2);
+    --color-chart-3: var(--chart-3);
+    --color-chart-4: var(--chart-4);
+    --color-chart-5: var(--chart-5);
+    --color-sidebar: var(--sidebar);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-ring: var(--sidebar-ring);
+
+    --font-sans: var(--font-sans);
+    --font-mono: var(--font-mono);
+    --font-serif: var(--font-serif);
+
+    --radius-sm: calc(var(--radius) - 4px);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) + 4px);
+
+    --shadow-2xs: var(--shadow-2xs);
+    --shadow-xs: var(--shadow-xs);
+    --shadow-sm: var(--shadow-sm);
+    --shadow: var(--shadow);
+    --shadow-md: var(--shadow-md);
+    --shadow-lg: var(--shadow-lg);
+    --shadow-xl: var(--shadow-xl);
+    --shadow-2xl: var(--shadow-2xl);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    font-family: var(--font-sans), sans-serif;
+  }
+  body {
+    @apply bg-background text-foreground;
+    margin: 0;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+:deep(.cesium-viewer-bottom),
+:deep(.cesium-widget-credits),
+:deep(.cesium-viewer-toolbar),
+:deep(.cesium-viewer-animationContainer),
+:deep(.cesium-viewer-timelineContainer) {
+  display: none !important;
+}
+
+:deep(.cesium-widget-credits) {
+  display: none !important;
+}
